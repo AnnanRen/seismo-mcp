@@ -1,0 +1,29 @@
+# seismo-mcp — A toolkit of focused MCP servers for seismology.
+#
+# This is a uv "workspace" root. It is NOT published to PyPI.
+# Each package under packages/ is independently installable via uvx <name>.
+#
+#   packages/obspy-mcp   →  uvx obspy-mcp
+#   packages/cwp-su-mcp  →  uvx cwp-su-mcp
+#   packages/sac-mcp     →  uvx sac-mcp
+#
+# Mount only the servers you need, e.g.:
+#   claude mcp add obspy -- uvx obspy-mcp
+
+[project]
+name = "seismo-mcp"
+version = "0.1.0"
+description = "A toolkit of focused MCP servers for seismology (ObsPy / CWP-SU / SAC)."
+readme = "README.md"
+requires-python = ">=3.10"
+
+[tool.uv.workspace]
+members = ["packages/*"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+# The workspace root ships no wheel content; it exists only to coordinate packages.
+bypass-selection = true

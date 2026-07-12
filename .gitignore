@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.python-version
+
+# Build artifacts
+dist/
+build/
+*.whl
+*.tar.gz
+
+# MCP / IDE
+.mcp.json
+
+# OS
+.DS_Store
