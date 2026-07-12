@@ -39,10 +39,12 @@ separately:
 | `obspy-mcp` | ObsPy | (auto-installed — nothing to do) |
 | `cwp-su-mcp` | CWP-SU (Seismic Un\*x) | `echo $CWPROOT` set; `which sufilter` works |
 | `sac-mcp` | SAC (Seismic Analysis Code) | `which sac` works; `SACHOME` set |
+| `gmt-mcp` | PyGMT + GMT binary | `which gmt` works (`brew install gmt` on macOS) |
 
-If you don't have CWP-SU or SAC yet: [CWP-SU](https://wiki.seismic-unix.org)
+If you don't have CWP-SU, SAC, or GMT yet: [CWP-SU](https://wiki.seismic-unix.org)
 (free, open-source), [SAC](https://ds.iris.edu/ds/nodes/dmc/software/downloads/sac/)
-(free, requires registration).
+(free, requires registration), [GMT](https://www.generic-mapping-tools.org)
+(`brew install gmt` on macOS; PyGMT is auto-installed by `gmt-mcp`).
 
 ### Installing the servers
 
@@ -224,9 +226,11 @@ uv --version             # 验证: 应显示 "uv 0.11.x"
 | `obspy-mcp` | ObsPy |（自动安装，无需操作）|
 | `cwp-su-mcp` | CWP-SU（地震 Unix）| `echo $CWPROOT` 已设；`which sufilter` 有结果 |
 | `sac-mcp` | SAC（地震分析代码）| `which sac` 有结果；`SACHOME` 已设 |
+| `gmt-mcp` | PyGMT + GMT 二进制 | `which gmt` 有结果（macOS: `brew install gmt`）|
 
-若还没装 CWP-SU 或 SAC：[CWP-SU](https://wiki.seismic-unix.org)（免费开源）、
-[SAC](https://ds.iris.edu/ds/nodes/dmc/software/downloads/sac/)（免费，需注册）。
+若还没装 CWP-SU、SAC 或 GMT：[CWP-SU](https://wiki.seismic-unix.org)（免费开
+源）、[SAC](https://ds.iris.edu/ds/nodes/dmc/software/downloads/sac/)（免费，
+需注册）、[GMT](https://www.generic-mapping-tools.org)（macOS 用 `brew install gmt`；PyGMT 由 `gmt-mcp` 自动安装）。
 
 ### 安装 server
 

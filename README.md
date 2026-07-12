@@ -68,10 +68,11 @@ Pick only what you need. Each server is independent.
 | **obspy-mcp** | ObsPy / general waveform I/O | `claude mcp add obspy -- uvx obspy-mcp` |
 | **cwp-su-mcp** | CWP/SU reflection processing | `claude mcp add su -- uvx cwp-su-mcp` |
 | **sac-mcp** | SAC waveform analysis | `claude mcp add sac -- uvx sac-mcp` |
+| **gmt-mcp** | Maps & plots (PyGMT) | `claude mcp add gmt -- uvx gmt-mcp` |
 
 > **Prerequisite:** the relevant software must be installed on your computer
-> (ObsPy is auto-installed by `obspy-mcp`; CWP-SU and SAC must be installed
-> separately). See the [install guide](docs/INSTALL.md) for details.
+> (ObsPy is auto-installed by `obspy-mcp`; CWP-SU, SAC, and the GMT binary
+> must be installed separately). See the [install guide](docs/INSTALL.md) for details.
 >
 > **Note:** `uvx` comes from [uv](https://docs.astral.sh/uv/) — install it
 > with `brew install uv` (macOS/Linux) if you don't have it. The packages
@@ -98,6 +99,7 @@ Three independent servers, each wrapping one toolchain:
 | **[obspy-mcp](packages/obspy-mcp)** | Read any waveform format (SAC/MSEED/SEG-Y…), filter, preprocess, resample, convert formats, plot. |
 | **[cwp-su-mcp](packages/cwp-su-mcp)** | Seismic Unix trace ops: read headers, filter, gain (AGC), window, sort, set headers. |
 | **[sac-mcp](packages/sac-mcp)** | SAC waveform ops: list headers, preprocess, filter, cut, merge, remove instrument response. |
+| **[gmt-mcp](packages/gmt-mcp)** | Maps & plots: basemaps, coastlines, epicenter/station maps, x-y plots, labels. |
 
 ## Who is this for?
 
@@ -114,8 +116,8 @@ Three independent servers, each wrapping one toolchain:
 
 ## Status
 
-Working and tested against real local installs of ObsPy / CWP-SU / SAC. Three
-servers, ~22 tools. Feedback and contributions welcome.
+Working and tested against real local installs of ObsPy / CWP-SU / SAC / PyGMT.
+Four servers, ~28 tools. Feedback and contributions welcome.
 
 ## License
 
@@ -163,9 +165,10 @@ MIT — see [LICENSE](LICENSE).
 | **obspy-mcp** | ObsPy / 通用波形读写 | `claude mcp add obspy -- uvx obspy-mcp` |
 | **cwp-su-mcp** | CWP/SU 反射地震处理 | `claude mcp add su -- uvx cwp-su-mcp` |
 | **sac-mcp** | SAC 波形分析 | `claude mcp add sac -- uvx sac-mcp` |
+| **gmt-mcp** | 地图与绘图（PyGMT）| `claude mcp add gmt -- uvx gmt-mcp` |
 
-> **前提：** 相应软件需已装在本机（ObsPy 会由 `obspy-mcp` 自动安装；CWP-SU 和
-> SAC 需自行安装）。详见[安装指南](docs/INSTALL.md)。
+> **前提：** 相应软件需已装在本机（ObsPy 会由 `obspy-mcp` 自动安装；CWP-SU、
+> SAC 和 GMT 二进制需自行安装）。详见[安装指南](docs/INSTALL.md)。
 
 **2. 重启 AI 助手，直接开口**
 
@@ -187,6 +190,7 @@ MIT — see [LICENSE](LICENSE).
 | **[obspy-mcp](packages/obspy-mcp)** | 读各种波形格式（SAC/MSEED/SEG-Y…）、滤波、预处理、重采样、格式转换、绘图。 |
 | **[cwp-su-mcp](packages/cwp-su-mcp)** | 地震 Unix 道处理：读头、滤波、增益（AGC）、时窗、排序、设头。 |
 | **[sac-mcp](packages/sac-mcp)** | SAC 波形操作：读头、预处理、滤波、截取、合并、去仪器响应。 |
+| **[gmt-mcp](packages/gmt-mcp)** | 地图与绘图：底图、海岸线、震中/台站分布、x-y 图、文字标注。 |
 
 ### 想了解更多
 
@@ -196,8 +200,8 @@ MIT — see [LICENSE](LICENSE).
 
 ### 状态
 
-已在真实安装的 ObsPy / CWP-SU / SAC 上测试通过。三个 server、约 22 个工具。欢
-迎反馈和贡献。
+已在真实安装的 ObsPy / CWP-SU / SAC / PyGMT 上测试通过。四个 server、约 28 个
+工具。欢迎反馈和贡献。
 
 ### 许可证
 
