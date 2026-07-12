@@ -1,107 +1,70 @@
-# Installation Guide
+# Installation Guide / 安装指南
 
-> Plain-language setup for seismo-mcp. If you just want the 30-second version,
-> see the [main README](../README.md). This doc covers prerequisites, each
-> client's config, and troubleshooting.
-
-## TL;DR
-
-```sh
-# 1. Install uv (if you don't have it)
-brew install uv          # macOS/Linux. Or: curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# 2. Mount the server(s) you want in your MCP client
-claude mcp add obspy -- uvx obspy-mcp
-claude mcp add su     -- uvx cwp-su-mcp
-claude mcp add sac    -- uvx sac-mcp
-
-# 3. Restart your client and just ask.
-```
-
-That's it for ObsPy. CWP-SU and SAC need their own software installed first
-(see below).
+[English](#english) · [中文](#中文)
 
 ---
 
-## Prerequisites
+<a id="english"></a>
+## English
 
-### Python & uv
+> Plain-language setup. For the 30-second version, see the
+> [main README](../README.md). This doc covers prerequisites, per-client
+> configuration for five AI assistants, and troubleshooting.
 
-seismo-mcp servers are Python packages. You need:
+### TL;DR
 
-- **Python ≥ 3.10** (3.12 recommended)
-- **[uv](https://docs.astral.sh/uv/)** — a fast Python package runner. `uvx`
-  (bundled with uv) runs the servers in isolated environments without
-  polluting your system Python.
-
-Install uv:
 ```sh
-# macOS / Linux
-brew install uv
-# or
-curl -LsSf https://astral.sh/uv/install.sh | sh
+brew install uv                                        # install uv (macOS/Linux)
+claude mcp add obspy -- uvx obspy-mcp                  # mount a server (Claude Code)
 ```
 
-Verify:
+That's it for ObsPy. CWP-SU and SAC need their own software installed first.
+
+### Prerequisites
+
+**Python & uv.** seismo-mcp servers are Python packages run via
+[uv](https://docs.astral.sh/uv/), which creates isolated environments so
+nothing pollutes your system Python.
+
 ```sh
-uv --version    # should print something like "uv 0.11.x"
+brew install uv          # macOS/Linux
+uv --version             # verify: "uv 0.11.x"
 ```
 
-### The seismology software itself
+**The seismology software.** Each server wraps a toolchain you install
+separately:
 
-Each server wraps a toolchain that must be **installed separately** on your
-computer. The server talks to it; it doesn't include it.
-
-| Server | Software needed | How to check it's installed |
+| Server | Software needed | Check it's installed |
 |---|---|---|
-| `obspy-mcp` | ObsPy | (auto-installed by the server — nothing to do) |
-| `cwp-su-mcp` | CWP-SU (Seismic Un\*x) | `echo $CWPROOT` should be set; `which sufilter` works |
+| `obspy-mcp` | ObsPy | (auto-installed — nothing to do) |
+| `cwp-su-mcp` | CWP-SU (Seismic Un\*x) | `echo $CWPROOT` set; `which sufilter` works |
 | `sac-mcp` | SAC (Seismic Analysis Code) | `which sac` works; `SACHOME` set |
 
-**If you don't have CWP-SU or SAC yet**, you need to install them first —
-seismo-mcp can't help without the underlying software. See their official docs:
-- CWP-SU: https://wiki.seismic-unix.org (free, open-source)
-- SAC: https://ds.iris.edu/ds/nodes/dmc/software/downloads/sac/ (free, requires registration)
+If you don't have CWP-SU or SAC yet: [CWP-SU](https://wiki.seismic-unix.org)
+(free, open-source), [SAC](https://ds.iris.edu/ds/nodes/dmc/software/downloads/sac/)
+(free, requires registration).
 
----
+### Installing the servers
 
-## Installing the servers
-
-### Option A: From PyPI (recommended, once published)
-
-After the packages are on PyPI, this is the one-line install:
-
+**From PyPI (once published):**
 ```sh
-claude mcp add obspy -- uvx obspy-mcp
+uvx obspy-mcp    # runs the latest published version in an isolated env
 ```
 
-`uvx` downloads the package on first run, creates an isolated environment,
-and launches it. You never manage the Python deps yourself.
-
-### Option B: From source (for now, or for development)
-
-Until PyPI publishing, run directly from a clone:
-
+**From source (for now / development):**
 ```sh
 git clone https://github.com/AnnanRen/seismo-mcp.git
 cd seismo-mcp
-uv sync                           # set up all packages
-
-# Mount from the local clone (Claude Code / Cursor):
-claude mcp add obspy -- uv run --directory . --package obspy-mcp python -m obspy_mcp.server
+uv sync
 ```
 
-(Adjust the path to point at your clone.)
+### Configuring your AI assistant
 
----
+Different AI assistants read MCP config from different places. **Pick the one
+you use.** All examples below mount the `obspy-mcp` server — swap the package
+name for `cwp-su-mcp` or `sac-mcp` as needed.
 
-## Configuring your MCP client
-
-Different AI clients read MCP config from different places. The
-`claude mcp add` command handles Claude Desktop/Code automatically. For other
-clients, edit their config file manually.
-
-### Claude Desktop (macOS)
+#### Claude Desktop (the desktop app)
 
 Edit `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
@@ -111,105 +74,297 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json`:
     "obspy": {
       "command": "uvx",
       "args": ["obspy-mcp"]
-    },
-    "sac": {
-      "command": "uvx",
-      "args": ["sac-mcp"],
-      "env": {
-        "SACHOME": "/usr/local/sac",
-        "SACAUX": "/usr/local/sac/aux",
-        "PATH": "/usr/local/sac/bin:/usr/bin:/bin"
+    }
+  }
+}
+```
+
+⚠️ **Claude Desktop is a GUI app — it does NOT inherit your shell PATH.** If
+`uvx` isn't found, use an absolute path: run `which uvx` in a terminal and
+paste that path (e.g. `/Users/you/.local/bin/uvx`) as `command`.
+
+#### Claude Code (the CLI)
+
+Simplest — one command:
+
+```sh
+claude mcp add obspy -- uvx obspy-mcp
+```
+
+Scopes: `--scope local` (default, this project), `--scope user` (all your
+projects), `--scope project` (writes `.mcp.json` to share with a team).
+
+#### Codex (OpenAI Codex CLI)
+
+Edit `~/.codex/config.toml` (TOML format, not JSON):
+
+```toml
+[mcp_servers.obspy]
+command = "uvx"
+args = ["obspy-mcp"]
+```
+
+Verify with `codex mcp list`. (stdio transport only; remote MCP not natively
+supported.)
+
+#### OpenCode (sst/opencode)
+
+Edit `~/.config/opencode/opencode.json`:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "obspy": {
+      "type": "local",
+      "command": ["uvx", "obspy-mcp"],
+      "enabled": true
+    }
+  }
+}
+```
+
+⚠️ **OpenCode-specific:** `command` is a **single array** combining the
+executable and its args — there's no separate `args` field. Don't paste the
+Claude-style format here.
+
+#### ZCode
+
+Edit `~/.zcode/cli/config.json`:
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "obspy": {
+        "type": "stdio",
+        "command": "uvx",
+        "args": ["obspy-mcp"]
       }
     }
   }
 }
 ```
 
-> **Note the `env` block for `sac`:** MCP clients don't run servers from a
-> login shell, so environment variables like `SACHOME` and `PATH` aren't
-> inherited. You may need to set them explicitly here so the server can find
-> SAC/CWP-SU binaries. (The servers also try to auto-detect common install
-> paths, but explicit `env` is the most reliable.)
+⚠️ **ZCode-specific:** `command` is a **string**, `args` is an **array**.
+Unknown top-level keys silently drop the server — keep it minimal.
 
-### Cursor
+#### Cross-client cheat sheet
 
-In Cursor settings → MCP, add servers via the UI, or edit
-`~/.cursor/mcp.json` with the same structure as Claude Desktop above.
+| Client | Config file (macOS) | Format | `command` field | Inherits shell PATH? |
+|---|---|---|---|---|
+| Claude Desktop | `~/Library/Application Support/Claude/claude_desktop_config.json` | JSON `mcpServers` | `"command": "uvx"` | **No** — use absolute path |
+| Claude Code | `~/.claude.json` (or `.mcp.json`) | JSON; `claude mcp add` | `claude mcp add n -- uvx <pkg>` | Yes |
+| Codex | `~/.codex/config.toml` | TOML `[mcp_servers.n]` | `command = "uvx"` | Yes |
+| OpenCode | `~/.config/opencode/opencode.json` | JSON `mcp` | `"command": ["uvx","<pkg>"]` | Yes |
+| ZCode | `~/.zcode/cli/config.json` | JSON `mcp.servers` | `"command": "uvx"` | Yes |
 
-### Other clients (VS Code, etc.)
-
-Any client that speaks MCP accepts the same `{command, args, env}` shape. See
-your client's docs for where its config file lives.
-
----
-
-## Verifying it works
+### Verifying
 
 After installing and restarting your client, ask the assistant:
+> *Check the environment for this server.*
 
-> *Check the environment for the obspy / su / sac server.
+It should call `diagnose_environment` and report `OK: ... found at /path`.
 
-It should call `diagnose_environment`, which reports whether the backend is
-found. If you see `OK: ... found at /path`, you're set. If you see an error,
-read on.
+### Troubleshooting
+
+**"command not found" / `spawn uvx ENOENT`** — the client can't find `uvx`.
+Most likely you're on Claude Desktop (which doesn't inherit PATH). Run
+`which uvx` in a terminal and use that absolute path as `command`.
+
+**"CWP-SU not found" / "sac not found"** — the server can't find the software.
+Either it isn't installed, or it's not on the server's PATH. Set `env`
+explicitly in the config:
+```json
+"env": { "PATH": "/usr/local/sac/bin:/usr/local/cwp/bin:/usr/bin:/bin" }
+```
+
+**SAC: "aux directory not Found"** — SAC's `sacinit.sh` hard-codes
+`/usr/local/sac`. If SAC is elsewhere, set it explicitly:
+```json
+"env": { "SACHOME": "/Users/you/src/sac", "SACAUX": "/Users/you/src/sac/aux" }
+```
+
+**Tool returns a file path instead of showing data** — intentional. Waveform
+arrays are too big for the model's context, so processing tools write a file
+and return the path. Open it yourself, or ask the assistant to plot it.
 
 ---
 
-## Troubleshooting
+<a id="中文"></a>
+## 中文
 
-### "CWP-SU not found" / "sac not found"
+> 大白话的安装说明。30 秒极简版见[主 README](../README.md)。本文件涵盖前置依赖、
+> 五款 AI 助手各自的配置方法，以及故障排查。
 
-The server can't find the software on PATH. Either:
+### 极简流程
 
-1. **The software isn't installed.** Install CWP-SU / SAC first (links above).
-2. **It's installed but not on the server's PATH.** MCP clients don't launch
-   servers from a login shell, so your `~/.zshrc` PATH edits don't apply.
-   Fix it by setting `env` explicitly in the client config (see the Claude
-   Desktop example above — set `PATH` to include the software's `bin` dir).
+```sh
+brew install uv                                        # 安装 uv (macOS/Linux)
+claude mcp add obspy -- uvx obspy-mcp                  # 挂载某个 server (Claude Code)
+```
 
-### SAC: "aux directory not Found"
+ObsPy 无需额外操作。CWP-SU 和 SAC 需先自行安装相应软件。
 
-SAC's bundled `sacinit.sh` hard-codes `SACHOME=/usr/local/sac`. If you
-installed SAC somewhere else (e.g. `~/src/sac`), set `SACHOME` and `SACAUX`
-explicitly in the client config's `env` block:
+### 前置依赖
+
+**Python 和 uv。** seismo-mcp 的 server 是 Python 包，通过
+[uv](https://docs.astral.sh/uv/) 运行——uv 会创建隔离环境，不会污染你的系统
+Python。
+
+```sh
+brew install uv          # macOS/Linux
+uv --version             # 验证: 应显示 "uv 0.11.x"
+```
+
+**地震学软件本身。** 每个 server 封装的工具链需单独安装：
+
+| Server | 需要的软件 | 检查是否已装 |
+|---|---|---|
+| `obspy-mcp` | ObsPy |（自动安装，无需操作）|
+| `cwp-su-mcp` | CWP-SU（地震 Unix）| `echo $CWPROOT` 已设；`which sufilter` 有结果 |
+| `sac-mcp` | SAC（地震分析代码）| `which sac` 有结果；`SACHOME` 已设 |
+
+若还没装 CWP-SU 或 SAC：[CWP-SU](https://wiki.seismic-unix.org)（免费开源）、
+[SAC](https://ds.iris.edu/ds/nodes/dmc/software/downloads/sac/)（免费，需注册）。
+
+### 安装 server
+
+**从 PyPI（发布后）：**
+```sh
+uvx obspy-mcp    # 在隔离环境里运行最新发布版
+```
+
+**从源码（当前 / 开发用）：**
+```sh
+git clone https://github.com/AnnanRen/seismo-mcp.git
+cd seismo-mcp
+uv sync
+```
+
+### 配置你的 AI 助手
+
+不同 AI 助手读取 MCP 配置的位置不同。**选你用的那一个。** 下面示例都挂载
+`obspy-mcp`——把包名换成 `cwp-su-mcp` 或 `sac-mcp` 即可装别的。
+
+#### Claude Desktop（桌面应用）
+
+编辑 `~/Library/Application Support/Claude/claude_desktop_config.json`：
 
 ```json
-"env": {
-  "SACHOME": "/Users/you/src/sac",
-  "SACAUX": "/Users/you/src/sac/aux"
+{
+  "mcpServers": {
+    "obspy": {
+      "command": "uvx",
+      "args": ["obspy-mcp"]
+    }
+  }
 }
 ```
 
-The `sac-mcp` server also auto-detects common paths, but explicit is safer.
+⚠️ **Claude Desktop 是图形应用，不继承你 shell 的 PATH。** 若提示找不到
+`uvx`，在终端运行 `which uvx`，把得到的绝对路径（如
+`/Users/你/.local/bin/uvx`）填到 `command` 里。
 
-### `uvx: command not found`
+#### Claude Code（命令行工具）
 
-Install uv (see Prerequisites above).
-
-### The tool runs but returns "ERROR: ..."
-
-The server captured an error from the underlying software. The error text is
-returned to the assistant verbatim — read it; it usually names the problem
-(e.g. `"wagc too long for trace"` means your AGC window exceeds the trace
-length). Fix the parameters and try again.
-
-### Tool returns a file path instead of showing the data
-
-This is **intentional**, not an error. Waveform arrays are too large for the
-model's context, so processing tools write a new file and return the path.
-Open the file yourself, or ask the assistant to plot it (the plot comes back
-as an inline image).
-
----
-
-## Uninstalling
-
-Remove the server from your client (delete its entry from the config file,
-or `claude mcp remove <name>`), then if you installed from PyPI:
+最简单——一条命令：
 
 ```sh
-uv cache clean    # optional: clears uvx-cached packages
+claude mcp add obspy -- uvx obspy-mcp
 ```
 
-There's nothing else to clean up — `uvx` runs everything in isolated
-environments that are auto-managed.
+作用域：`--scope local`（默认，当前项目）、`--scope user`（你的所有项目）、
+`--scope project`（写入 `.mcp.json`，供团队共享）。
+
+#### Codex（OpenAI Codex CLI）
+
+编辑 `~/.codex/config.toml`（TOML 格式，不是 JSON）：
+
+```toml
+[mcp_servers.obspy]
+command = "uvx"
+args = ["obspy-mcp"]
+```
+
+用 `codex mcp list` 验证。（仅支持 stdio 传输，不原生支持远程 MCP。）
+
+#### OpenCode（sst/opencode）
+
+编辑 `~/.config/opencode/opencode.json`：
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "obspy": {
+      "type": "local",
+      "command": ["uvx", "obspy-mcp"],
+      "enabled": true
+    }
+  }
+}
+```
+
+⚠️ **OpenCode 专属：** `command` 是**单个数组**，把可执行文件和参数合在一起
+——没有单独的 `args` 字段。别把 Claude 的格式粘到这里。
+
+#### ZCode
+
+编辑 `~/.zcode/cli/config.json`：
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "obspy": {
+        "type": "stdio",
+        "command": "uvx",
+        "args": ["obspy-mcp"]
+      }
+    }
+  }
+}
+```
+
+⚠️ **ZCode 专属：** `command` 是**字符串**，`args` 是**数组**。多余的字段会让
+server 被静默丢弃——保持精简。
+
+#### 五客户端速查表
+
+| 客户端 | 配置文件（macOS）| 格式 | `command` 写法 | 继承 shell PATH？|
+|---|---|---|---|---|
+| Claude Desktop | `~/Library/Application Support/Claude/claude_desktop_config.json` | JSON `mcpServers` | `"command": "uvx"` | **否**——用绝对路径 |
+| Claude Code | `~/.claude.json`（或 `.mcp.json`）| JSON；`claude mcp add` | `claude mcp add n -- uvx <pkg>` | 是 |
+| Codex | `~/.codex/config.toml` | TOML `[mcp_servers.n]` | `command = "uvx"` | 是 |
+| OpenCode | `~/.config/opencode/opencode.json` | JSON `mcp` | `"command": ["uvx","<pkg>"]` | 是 |
+| ZCode | `~/.zcode/cli/config.json` | JSON `mcp.servers` | `"command": "uvx"` | 是 |
+
+### 验证
+
+装好并重启客户端后，问助手：
+> *检查一下这个 server 的环境。*
+
+它应调用 `diagnose_environment`，返回 `OK: ... found at /路径`。
+
+### 故障排查
+
+**"command not found" / `spawn uvx ENOENT`**——客户端找不到 `uvx`。多半是用
+Claude Desktop（不继承 PATH）。在终端 `which uvx`，用那个绝对路径作为
+`command`。
+
+**"CWP-SU not found" / "sac not found"**——server 找不到软件。要么没装，要么不
+在 server 的 PATH 上。在配置里显式设 `env`：
+```json
+"env": { "PATH": "/usr/local/sac/bin:/usr/local/cwp/bin:/usr/bin:/bin" }
+```
+
+**SAC: "aux directory not Found"**——SAC 自带的 `sacinit.sh` 把路径硬编码成
+`/usr/local/sac`。若 SAC 装在别处，显式设置：
+```json
+"env": { "SACHOME": "/Users/你/src/sac", "SACAUX": "/Users/你/src/sac/aux" }
+```
+
+**工具返回了文件路径而不是显示数据**——这是**设计如此**，不是报错。波形数组
+太大，不能塞进模型上下文，所以处理类工具写文件、返回路径。你自己打开文件，
+或让助手画图（图会以内联图片返回）。
