@@ -168,7 +168,8 @@ seismo-mcp/                        ← uv workspace root (not published)
 │   │       └── _helpers.py        ← inlined plot/env helpers
 │   ├── cwp-su-mcp/                ← same structure
 │   ├── sac-mcp/                   ← same structure
-│   └── gmt-mcp/                   ← same structure (PyGMT, in-process import)
+│   ├── gmt-mcp/                   ← same structure (PyGMT, in-process import)
+│   └── obs-raw-mcp/               ← same structure (IGGCAS raw2su/graw2sac, subprocess)
 ├── docs/                          ← this file + INSTALL.md
 ├── examples/                      ← end-to-end tests per server
 └── pyproject.toml                 ← workspace coordination only
@@ -337,7 +338,8 @@ seismo-mcp/                        ← uv workspace 根（不发布）
 │   │       └── _helpers.py        ← 内联的 plot/env helper
 │   ├── cwp-su-mcp/                ← 同结构
 │   ├── sac-mcp/                   ← 同结构
-│   └── gmt-mcp/                   ← 同结构（PyGMT，进程内 import）
+│   ├── gmt-mcp/                   ← 同结构（PyGMT，进程内 import）
+│   └── obs-raw-mcp/               ← 同结构（IGGCAS raw2su/graw2sac，subprocess）
 ├── docs/                          ← 本文件 + INSTALL.md
 ├── examples/                      ← 每个 server 的端到端测试
 └── pyproject.toml                 ← 仅用于 workspace 协调

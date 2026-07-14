@@ -69,6 +69,7 @@ Pick only what you need. Each server is independent.
 | **cwp-su-mcp** | CWP/SU reflection processing | `claude mcp add su -- uvx cwp-su-mcp` |
 | **sac-mcp** | SAC waveform analysis | `claude mcp add sac -- uvx sac-mcp` |
 | **gmt-mcp** | Maps & plots (PyGMT) | `claude mcp add gmt -- uvx gmt-mcp` |
+| **obs-raw-mcp** | IGGCAS OBS raw → SAC/SU | `claude mcp add obs-raw -- uvx obs-raw-mcp` |
 
 > **Prerequisite:** the relevant software must be installed on your computer
 > (ObsPy is auto-installed by `obspy-mcp`; CWP-SU, SAC, and the GMT binary
@@ -92,7 +93,7 @@ Then describe what you want — the assistant will use the tools automatically.
 
 ## What's inside?
 
-Three independent servers, each wrapping one toolchain:
+Five independent servers, each wrapping one toolchain:
 
 | Server | What it can do |
 |---|---|
@@ -100,6 +101,7 @@ Three independent servers, each wrapping one toolchain:
 | **[cwp-su-mcp](packages/cwp-su-mcp)** | Seismic Unix trace ops: read headers, filter, gain (AGC), window, sort, set headers. |
 | **[sac-mcp](packages/sac-mcp)** | SAC waveform ops: list headers, preprocess, filter, cut, merge, remove instrument response. |
 | **[gmt-mcp](packages/gmt-mcp)** | Maps & plots: basemaps, coastlines, epicenter/station maps, x-y plots, labels. |
+| **[obs-raw-mcp](packages/obs-raw-mcp)** | IGGCAS OBS proprietary raw → SAC (continuous) / SU (shot gathers): auto-extract params, merge shards, fix graw2sac npts bug. |
 
 ## Who is this for?
 
@@ -166,6 +168,7 @@ MIT — see [LICENSE](LICENSE).
 | **cwp-su-mcp** | CWP/SU 反射地震处理 | `claude mcp add su -- uvx cwp-su-mcp` |
 | **sac-mcp** | SAC 波形分析 | `claude mcp add sac -- uvx sac-mcp` |
 | **gmt-mcp** | 地图与绘图（PyGMT）| `claude mcp add gmt -- uvx gmt-mcp` |
+| **obs-raw-mcp** | IGGCAS OBS 原始格式 → SAC/SU | `claude mcp add obs-raw -- uvx obs-raw-mcp` |
 
 > **前提：** 相应软件需已装在本机（ObsPy 会由 `obspy-mcp` 自动安装；CWP-SU、
 > SAC 和 GMT 二进制需自行安装）。详见[安装指南](docs/INSTALL.md)。
@@ -183,7 +186,7 @@ MIT — see [LICENSE](LICENSE).
 
 ### 里面有什么？
 
-三个独立 server，各封装一个工具链：
+五个独立 server，各封装一个工具链：
 
 | Server | 能做什么 |
 |---|---|
@@ -191,6 +194,7 @@ MIT — see [LICENSE](LICENSE).
 | **[cwp-su-mcp](packages/cwp-su-mcp)** | 地震 Unix 道处理：读头、滤波、增益（AGC）、时窗、排序、设头。 |
 | **[sac-mcp](packages/sac-mcp)** | SAC 波形操作：读头、预处理、滤波、截取、合并、去仪器响应。 |
 | **[gmt-mcp](packages/gmt-mcp)** | 地图与绘图：底图、海岸线、震中/台站分布、x-y 图、文字标注。 |
+| **[obs-raw-mcp](packages/obs-raw-mcp)** | IGGCAS OBS 私有 raw 格式 → SAC（连续）/ SU（炮集）：自动提取参数、合并分片、修 graw2sac 的 npts bug。 |
 
 ### 想了解更多
 

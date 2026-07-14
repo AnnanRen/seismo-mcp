@@ -1,0 +1,29 @@
+[project]
+name = "obs-raw-mcp"
+version = "0.1.0"
+description = "MCP server exposing IGGCAS OBS raw → SAC/SU format conversion tools to LLM agents."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "ran" }]
+keywords = ["mcp", "obs", "ocean-bottom-seismometer", "raw2su", "graw2sac", "seismology", "seismic", "llm", "ai"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Intended Audience :: Science/Research",
+]
+dependencies = [
+    "mcp>=1.27,<2",
+]
+
+# Console entry point so `uvx obs-raw-mcp` launches the server over stdio.
+# Requires IGGCAS raw2su and graw2sac on PATH.
+[project.scripts]
+obs-raw-mcp = "obs_raw_mcp.server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/obs_raw_mcp"]

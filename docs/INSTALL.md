@@ -40,6 +40,7 @@ separately:
 | `cwp-su-mcp` | CWP-SU (Seismic Un\*x) | `echo $CWPROOT` set; `which sufilter` works |
 | `sac-mcp` | SAC (Seismic Analysis Code) | `which sac` works; `SACHOME` set |
 | `gmt-mcp` | PyGMT + GMT binary | `which gmt` works (`brew install gmt` on macOS) |
+| `obs-raw-mcp` | IGGCAS `raw2su` + `graw2sac` | `which raw2su graw2sac` works (in-house, IGGCAS) |
 
 If you don't have CWP-SU, SAC, or GMT yet: [CWP-SU](https://wiki.seismic-unix.org)
 (free, open-source), [SAC](https://ds.iris.edu/ds/nodes/dmc/software/downloads/sac/)
@@ -227,6 +228,7 @@ uv --version             # 验证: 应显示 "uv 0.11.x"
 | `cwp-su-mcp` | CWP-SU（地震 Unix）| `echo $CWPROOT` 已设；`which sufilter` 有结果 |
 | `sac-mcp` | SAC（地震分析代码）| `which sac` 有结果；`SACHOME` 已设 |
 | `gmt-mcp` | PyGMT + GMT 二进制 | `which gmt` 有结果（macOS: `brew install gmt`）|
+| `obs-raw-mcp` | IGGCAS `raw2su` + `graw2sac` | `which raw2su graw2sac` 有结果（所内分发，非开源）|
 
 若还没装 CWP-SU、SAC 或 GMT：[CWP-SU](https://wiki.seismic-unix.org)（免费开
 源）、[SAC](https://ds.iris.edu/ds/nodes/dmc/software/downloads/sac/)（免费，
